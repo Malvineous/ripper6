@@ -72,8 +72,12 @@ bool check_cdfm(const uint8_t *content, unsigned long len, Match *mc)
 		if (loopStart > lenSample) return false;
 		totalSize += lenSample;
 		uint32_t loopEnd = as_u32le(inst + 12);
-		if ((loopEnd != 0x00FFFFFF) && (loopEnd > lenSample)) return false;
-		if (loopEnd == 0) return false; // no loop should be 0x00FFFFFF
+		if (
+			(loopEnd != 0x00FFFFFF) // normal value for no-loop
+			&& (loopEnd != 0x000FFFFF) // amnesia 2nd song uses this for some reason
+			&& (loopEnd > lenSample) // loop past end of sample
+		) return false;
+		if (loopEnd == 0) return false; // no-loop should be 0x00FFFFFF
 		if (loopEnd <= loopStart) return false; // wrong way around
 	}
 
