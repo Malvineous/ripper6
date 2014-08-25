@@ -3,6 +3,7 @@ bin_PROGRAMS = ripper6
 ripper6_SOURCES = main.cpp
 
 EXTRA_ripper6_SOURCES  = check_cdfm.cpp
+EXTRA_ripper6_SOURCES += check_midi.cpp
 EXTRA_ripper6_SOURCES += check_tbsa.cpp
 
 WARNINGS = -Wall -Wextra -Wno-unused-parameter

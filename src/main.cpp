@@ -79,6 +79,16 @@ inline uint32_t as_u32le(const uint8_t *content)
 	return le32toh(*((uint32_t *)content));
 }
 
+inline uint16_t as_u16be(const uint8_t *content)
+{
+	return be16toh(*((uint16_t *)content));
+}
+
+inline uint32_t as_u32be(const uint8_t *content)
+{
+	return be32toh(*((uint32_t *)content));
+}
+
 /// Require the string, which can contain embedded nulls, be at the given offset
 /**
  * @param c
@@ -117,6 +127,7 @@ inline uint32_t as_u32le(const uint8_t *content)
 	if ((i < min) || (i > max)) return false;
 
 #include "check_cdfm.cpp"
+#include "check_midi.cpp"
 #include "check_tbsa.cpp"
 
 int main(int argc, char *argv[])
@@ -143,6 +154,7 @@ int main(int argc, char *argv[])
 
 	std::vector<CheckFunction> checkFunctions;
 	checkFunctions.push_back(check_cdfm);
+	checkFunctions.push_back(check_midi);
 	checkFunctions.push_back(check_tbsa);
 
 	uint8_t *cp = content;
