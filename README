@@ -10,9 +10,10 @@ files.
 The following file formats are recognised and extracted:
 
  [Music]
-  * Renaissance CDFM/670
   * The Bone Shaker Architect (TBSA0.01)
-  * Standard MIDI
+  * Renaissance CDFM/670
+  * Standard RIFF files (.wav, .rmi, .dsm, etc.)
+  * Standard MIDI (.mid)
 
 The program is compiled and installed in the usual way:
 
