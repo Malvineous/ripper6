@@ -160,16 +160,19 @@ int main(int argc, char *argv[])
 	checkFunctions.push_back(check_tbsa);
 
 	uint8_t *cp = content;
+	uint8_t *end = content + s.st_size;
+	unsigned long lenRemaining = s.st_size;
 	Match match;
-	for (unsigned long i = s.st_size; i > 0; i--) {
-		if (i % 4096 == 0) {
-			std::cout << "\rSearching... " << s.st_size - i << " bytes ("
-				<< (s.st_size - i) * 100 / s.st_size << "%)" << std::flush;
+	while (cp < end) {
+		if ((unsigned long)cp % 4096 == 0) {
+			unsigned long offset = cp - content;
+			std::cout << "\rSearching... " << offset << " bytes ("
+				<< offset * 100 / s.st_size << "%)" << std::flush;
 		}
 		for (std::vector<CheckFunction>::iterator
 			c = checkFunctions.begin(); c != checkFunctions.end(); c++
 		) {
-			if ((*c)(cp, i, &match)) {
+			if ((*c)(cp, lenRemaining, &match)) {
 				std::stringstream ss;
 				ss << std::setw(4) << std::setfill('0') << matchCount << '.' << match.ext;
 				std::cout << "\e[2K\rFound match " << std::hex << match.len
@@ -201,9 +204,13 @@ int main(int argc, char *argv[])
 				munmap(matchContent, match.len);
 				close(fdmatch);
 				matchCount++;
+				cp += match.len - 1;
+				lenRemaining -= match.len - 1;
+				break;
 			}
 		}
 		cp++;
+		lenRemaining--;
 	}
 	std::cout << "\e[2K\rComplete.  " << s.st_size << " bytes (100%)" << std::endl;
 
