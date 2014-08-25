@@ -6,6 +6,7 @@ EXTRA_ripper6_SOURCES  = check_cdfm.cpp
 EXTRA_ripper6_SOURCES += check_midi.cpp
 EXTRA_ripper6_SOURCES += check_riff.cpp
 EXTRA_ripper6_SOURCES += check_tbsa.cpp
+EXTRA_ripper6_SOURCES += check_voc.cpp
 
 WARNINGS = -Wall -Wextra -Wno-unused-parameter
 
