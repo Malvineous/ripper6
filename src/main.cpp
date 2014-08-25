@@ -131,6 +131,7 @@ inline uint32_t as_u32be(const uint8_t *content)
 #include "check_cdfm.cpp"
 #include "check_midi.cpp"
 #include "check_riff.cpp"
+#include "check_s3m.cpp"
 #include "check_tbsa.cpp"
 #include "check_voc.cpp"
 
@@ -160,6 +161,7 @@ int main(int argc, char *argv[])
 	checkFunctions.push_back(check_cdfm);
 	checkFunctions.push_back(check_midi);
 	checkFunctions.push_back(check_riff);
+	checkFunctions.push_back(check_s3m);
 	checkFunctions.push_back(check_tbsa);
 	checkFunctions.push_back(check_voc);
 
