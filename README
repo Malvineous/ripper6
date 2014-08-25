@@ -1,0 +1,35 @@
+Ripper6
+Copyright 2014 Adam Nielsen <malvineous@shikadi.net>
+http://github.com/Malvineous/ripper6
+
+Ripper6 is a program that extracts files from within other files.  The most
+common use is searching the data files from games and demos, so that various
+assets like music or sound effects can be extracted and saved into separate
+files.
+
+The following file formats are recognised and extracted:
+
+ [Music]
+  * Renaissance CDFM/670
+  * The Bone Shaker Architect (TBSA0.01)
+
+The program is compiled and installed in the usual way:
+
+  ./configure && make
+  sudo make install
+
+You will need libgamecommon installed first.  If you downloaded the git
+release, run ./autogen.sh before the commands above.  You can also run
+"make check" to compile and run the tests.
+
+Most of the file formats are fully documented on the ModdingWiki - see
+http://www.shikadi.net/moddingwiki/
+
+The name is based on the excellent Ripper 5 utility, released for the MS-DOS
+platform in 1995 by JΘNas.
+
+This library is released under the GPLv3 license.
+
+Tip: Many DOS demos use custom compression, but running them through DOSBox and
+then doing a binary memory dump will give you the decompressed data that can be
+run through Ripper6.

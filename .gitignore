@@ -1,0 +1,36 @@
+# Autoconf stuff
+Makefile.in
+aclocal.m4
+autom4te.cache
+compile
+config.guess
+config.h.in
+config.sub
+configure
+depcomp
+install-sh
+ltmain.sh
+*.m4
+missing
+Makefile
+config.h
+config.log
+config.status
+.deps
+.libs
+stamp-h1
+lib*.pc
+libtool
+*.*~
+test-driver
+tests/test-suite.log
+tests/tests.log
+tests/tests.trs
+
+# Compilation fluff
+*.o
+*.lo
+*.la
+
+# Compiled binaries
+src/ripper6
