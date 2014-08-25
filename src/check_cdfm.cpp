@@ -21,6 +21,9 @@
 /// Maximum realistic length of a sample
 #define CDFM_MAX_SAMPLE_LEN 0x100000
 
+/// Maximum file size
+#define CDFM_MAX_FILESIZE 512 * 1024
+
 bool check_cdfm(const uint8_t *content, unsigned long len, Match *mc)
 {
 	// Too short
@@ -125,6 +128,8 @@ bool check_cdfm(const uint8_t *content, unsigned long len, Match *mc)
 			return false;
 		}
 	}
+
+	if (totalSize > CDFM_MAX_FILESIZE) return false;
 
 	mc->len = totalSize;
 	mc->cat = check::Music;
