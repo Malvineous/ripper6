@@ -34,8 +34,10 @@ using namespace camoto;
 struct check {
 	enum MatchCategory {
 		Unknown = 0,
-		Music,
 		Audio,
+		Image,
+		Music,
+		Video,
 		Other
 	};
 };
@@ -175,8 +177,10 @@ int main(int argc, char *argv[])
 					<< " [";
 				switch (match.cat) {
 					case check::Unknown: std::cout << "?"; break;
-					case check::Music: std::cout << "music"; break;
 					case check::Audio: std::cout << "audio"; break;
+					case check::Image: std::cout << "image"; break;
+					case check::Music: std::cout << "music"; break;
+					case check::Video: std::cout << "video"; break;
 					case check::Other: std::cout << "other"; break;
 				}
 				std::cout << "; " << match.desc << "]" << std::endl;
