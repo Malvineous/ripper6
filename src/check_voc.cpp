@@ -32,14 +32,17 @@ bool check_voc(const uint8_t *content, unsigned long len, Match *mc)
 	bool finished = false;
 	for (unsigned int i = 0; i < VOC_MAX_BLOCKS; i++) {
 		if (size >= len) return false;
-		unsigned int hdr = as_u32le(content + size);
-		unsigned int type = hdr & 0xFF;
-		unsigned int len = hdr >> 8;
-		size += 4;
+		unsigned int type = content[size];
+		size++;
 		if (type == 0) {
+			// This one doesn't store the length
 			finished = true;
 			break;
 		}
+		// Read the 24-bit length value
+		unsigned int hdr = as_u32le(content + size - 1);
+		unsigned int len = hdr >> 8;
+		size += 3;
 		if (type > 9) return false; // unknown block type
 		size += len;
 	}

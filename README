@@ -16,6 +16,8 @@ The following file formats are recognised and extracted:
   * Standard MIDI (.mid)
   * Creative Music Files (.cmf)
   * ScreamTracker 3 (.s3m)
+
+ [Audio]
   * Creative Voice Files (.voc)
 
 The program is compiled and installed in the usual way:
