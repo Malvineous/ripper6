@@ -35,10 +35,17 @@
 			color: #55FF55;
 			text-decoration: underline;
 		}
+		#bg {
+			position: absolute;
+			z-index: -100;
+			left: 0px;
+			top: 0px;
+		}
 	</style>
+	<script src="textmode.js" type="text/javascript"></script>
 </head>
-<body>
-
+<body onload="new TextMode('textmode', 9, 16, false, 'cp437.png', stalac);">
+<div id="bg"><canvas id="textmode"></canvas></div>
 <h1>Ripper6</h1>
 
 <p>
