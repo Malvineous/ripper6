@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Ripper6</title>
+	<style type="text/css">
+		body {
+			background-color: black;
+			color: #EEEEEE;
+			font-family: Terminus, fixed;
+		}
+		table {
+			border: 3px double #CCCCCC;
+			border-spacing: 0px;
+		}
+		table thead tr td {
+			border-bottom: 3px double #CCCCCC;
+		}
+		table td {
+			padding: 0.5ex;
+		}
+		h2 {
+			font-size: 100%;
+			text-decoration: underline;
+		}
+		a {
+			color: #55FF55;
+			text-decoration: none;
+		}
+		a:visited {
+			color: #00AA00;
+		}
+		a:hover {
+			color: #55FF55;
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+
+<h1>Ripper6</h1>
+
+<p>
+	Ripper6 is a program that extracts files from within other files.  The most
+	common use is searching the data files from games and demos, so that various
+	assets like music or sound effects can be extracted and saved into separate
+	files.
+</p>
+
+<h2>Use</h2>
+
+<p style="margin-left: 2em;">
+	ripper6 <i>filename</i>
+</p>
+<p>
+	This will search <i>filename</i> and if any matches are found, they will be
+	saved numerically in the current directory, starting from
+	<b>0000.<i>xyz</i></b> (where <i>xyz</i> is based on the file type as per the
+	table below.)
+</p>
+
+<h2>Download</h2>
+
+<p>
+	There are no binary releases yet, but you can download and compile the source
+	via git:
+</p>
+
+<ul>
+	<li><a href="http://github.com/Malvineous/ripper6">GitHub page</a></li>
+</ul>
+
+<h2>Requirements</h2>
+
+<p>
+	You will need <a href="http://www.shikadi.net/camoto">libgamecommon</a>
+	installed first.
+</p>
+
+<h2>Supported file formats</h2>
+
+<p>
+	The following file formats are recognised and extracted:
+</p>
+
+<table>
+<thead>
+	<tr><td>Type</td><td>Extension</td><td>Description</td></tr>
+</thead>
+<tbody>
+
+<tr><td>Audio</td><td>.voc</td><td><a href="http://www.shikadi.net/moddingwiki/VOC_Format">Creative Voice File</a></td></tr>
+<tr><td>Audio</td><td>.wav</td><td><a href="http://www.shikadi.net/moddingwiki/WAV_Format">RIFF Wave</a></td></tr>
+
+<tr><td>Music</td><td>.670</td><td><a href="http://www.shikadi.net/moddingwiki/CDFM_Format">Renaissance CDFM</a></td></tr>
+<tr><td>Music</td><td>.bsa</td><td><a href="http://www.shikadi.net/moddingwiki/TBSA_Music_Format">The Bone Shaker Architect</a> (TBSA0.01)</td></tr>
+<tr><td>Music</td><td>.cmf</td><td><a href="http://www.shikadi.net/moddingwiki/CMF_Format">Creative Music File</a></td></tr>
+<tr><td>Music</td><td>.dsm</td><td><a href="http://www.shikadi.net/moddingwiki/DSIK_Module_Format">Digital Sound Interface Kit (DSIK) module</a></td></tr>
+<tr><td>Music</td><td>.mid</td><td><a href="http://www.shikadi.net/moddingwiki/MID_Format">Standard MIDI file</a></td></tr>
+<tr><td>Music</td><td>.rmi</td><td>RIFF MIDI</td></tr>
+<tr><td>Music</td><td>.s3m</td><td><a href="http://www.shikadi.net/moddingwiki/S3M_Format">ScreamTracker 3 module</a></td></tr>
+
+<tr><td>Video</td><td>.avi</td><td>Microsoft AVI</td></tr>
+
+</tbody>
+</table>
+
+<p>
+	Each format has its size calculated by examining the data to ensure no extra
+	trailing bytes are left at the end.
+</p>
+
+<h2>Notes</h2>
+
+<p>
+	Most of the file formats are fully documented on the
+	<a href="http://www.shikadi.net/moddingwiki/">ModdingWiki</a>.
+</p>
+<p>
+	The name is based on the excellent Ripper 5 utility, released for the MS-DOS
+	platform in 1995 by JΘNas.
+</p>
+
+<h2>Tips</h2>
+<p>
+	Many DOS demos use custom compression, but running them through DOSBox
+	and then doing a binary memory dump will give you the decompressed data that
+	can be run through Ripper6.
+</p>
+<ol>
+	<li>Load a version of DOSBox with the debugger enabled</li>
+	<li>Run the demo, and press the key combination you set to break into the
+		debugger.  You may have to break into the debugger before the demo has
+		finished loading, as many modify the in-memory copy of their music files
+		(updating sample pointers to point to allocated memory, etc.) which can
+		render the files invalid (and Ripper6 will not recognise them.)
+	</li>
+	<li>Dump the memory - for real mode demos that only use conventional memory,
+		<b>MEMDUMPBIN 0:0 100000</b> will grab the lower 1MB.</li>
+	<li>Examine it: <b>ripper6 MEMDUMP.BIN</b></li>
+</ol>
+
+</body>
+</html>
