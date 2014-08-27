@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([ripper6], [0.1], [camoto@lists.shikadi.net], [], [http://www.shikadi.net/])
+AC_INIT([ripper6], [0.1], [https://github.com/Malvineous/ripper6/issues], [], [http://github.com/Malvineous/ripper6])
 AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
