@@ -10,15 +10,20 @@ files.
 The following file formats are recognised and extracted:
 
  [Music]
-  * The Bone Shaker Architect (TBSA0.01)
-  * Renaissance CDFM/670
-  * Standard RIFF files (.wav, .rmi, .dsm, etc.)
-  * Standard MIDI (.mid)
-  * Creative Music Files (.cmf)
-  * ScreamTracker 3 (.s3m)
+  * .670: Renaissance CDFM/670
+  * .bsa: The Bone Shaker Architect (TBSA0.01)
+  * .cmf: Creative Music Files
+  * .dsm: RIFF DSIK module
+  * .mid: Standard MIDI
+  * .rmi: RIFF MIDI
+  * .s3m: ScreamTracker 3 module
 
  [Audio]
-  * Creative Voice Files (.voc)
+  * .voc: Creative Voice Files
+  * .wav: RIFF Wave
+
+ [Misc]
+  * Any standard RIFF file
 
 The program is compiled and installed in the usual way:
 
