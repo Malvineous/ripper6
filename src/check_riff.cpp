@@ -25,6 +25,9 @@ bool check_riff(const uint8_t *content, unsigned long len, Match *mc)
 	if (lenChunk + 8 > len) return false;
 	std::string type((const char *)content + 8, 4);
 
+	// Chunk sizes must be a multiple of two
+	if (lenChunk % 2) lenChunk++;
+
 	mc->len = lenChunk + 8;
 	if (type.compare("AVI ") == 0) {
 		mc->cat = check::Video;
