@@ -17,13 +17,19 @@ The following file formats are recognised and extracted:
   * .mid: Standard MIDI
   * .rmi: RIFF MIDI
   * .s3m: ScreamTracker 3 module
+  * .xmi: Miles eXtended MIDI
 
  [Audio]
+  * .aiff: Audio Interchange File Format
   * .voc: Creative Voice Files
   * .wav: RIFF Wave
 
+ [Image]
+  * .lbm: InterLeaved BitMap
+
  [Misc]
   * Any standard RIFF file
+  * Any standard IFF-FORM file
 
 The program is compiled and installed in the usual way:
 
