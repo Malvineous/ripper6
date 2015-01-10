@@ -24,7 +24,7 @@ bool check_midi(const uint8_t *content, unsigned long len, Match *mc)
 {
 	REQUIRE(content, "MThd");
 	uint32_t lenMThd = as_u32be(content + 4);
-	if (lenMThd >= len) return false;
+	if (lenMThd > len) return false;
 
 	unsigned int numTracks = as_u16be(content + 10);
 	if (numTracks > MID_MAX_TRACKS) return false;
