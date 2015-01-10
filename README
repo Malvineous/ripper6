@@ -14,6 +14,7 @@ The following file formats are recognised and extracted:
   * .bsa: The Bone Shaker Architect (TBSA0.01)
   * .cmf: Creative Music Files
   * .dsm: RIFF DSIK module
+  * .ibk: OPL2 instrument bank
   * .mid: Standard MIDI
   * .rmi: RIFF MIDI
   * .s3m: ScreamTracker 3 module
