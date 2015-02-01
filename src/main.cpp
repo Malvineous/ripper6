@@ -18,6 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef _WIN32
+#define NOMINMAX
+#include <Windows.h>
+#include <stdint.h>
+#include <algorithm> // std::max
+#else
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -25,6 +31,7 @@
 #include <sys/mman.h>
 #include <string.h>
 #include <unistd.h>
+#endif
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -138,12 +145,58 @@ inline uint32_t as_u32be(const uint8_t *content)
 #include "check_tbsa.cpp"
 #include "check_voc.cpp"
 
+#ifdef _WIN32
+std::string GetLastErrorAsString()
+{
+	DWORD error = GetLastError();
+	if (error) {
+		LPVOID lpMsgBuf;
+		DWORD bufLen = FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL,
+			error,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR)&lpMsgBuf,
+			0,
+			NULL
+		);
+		if (bufLen) {
+			LPCSTR lpMsgStr = (LPCSTR)lpMsgBuf;
+			std::string result(lpMsgStr, lpMsgStr + bufLen);
+			LocalFree(lpMsgBuf);
+			return result;
+		}
+	}
+	return std::string();
+}
+#endif
+
 int main(int argc, char *argv[])
 {
 	if (argc < 2) {
 		std::cerr << "Must specify file to search." << std::endl;
 		return 1;
 	}
+#ifdef _WIN32
+	HANDLE hFile = CreateFile(argv[1], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, NULL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		std::cerr << "Unable to open " << argv[1] << ": " << GetLastErrorAsString() << std::endl;
+		return 2;
+	}
+	HANDLE hMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+	if (hMap == NULL) {
+		std::cerr << "Unable to memory map input file: " << GetLastErrorAsString() << std::endl;
+		return 3;
+	}
+	unsigned long lenFile = GetFileSize(hFile, NULL);
+	uint8_t *content = (uint8_t *)MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, 0);
+	if (content == NULL) {
+		std::cerr << "Unable to memory map input file view: " << GetLastErrorAsString() << std::endl;
+		return 4;
+	}
+#else
 	int fd = open(argv[1], O_RDONLY);
 	if (fd < 0) {
 		std::cerr << "Unable to open " << argv[1] << ": " << strerror(errno) << std::endl;
@@ -152,12 +205,13 @@ int main(int argc, char *argv[])
 
 	struct stat s;
 	fstat(fd, &s);
+	unsigned long lenFile = s.st_size;
 	uint8_t *content = (uint8_t *)mmap(0, s.st_size, PROT_READ, MAP_SHARED, fd, 0);
 	if (content == MAP_FAILED) {
 		std::cerr << "Unable to mmap() file: " << strerror(errno) << std::endl;
-		return 2;
+		return 4;
 	}
-
+#endif
 	unsigned long matchCount = 0;
 
 	std::vector<CheckFunction> checkFunctions;
@@ -172,14 +226,14 @@ int main(int argc, char *argv[])
 	checkFunctions.push_back(check_voc);
 
 	uint8_t *cp = content;
-	uint8_t *end = content + s.st_size;
-	unsigned long lenRemaining = s.st_size;
+	uint8_t *end = content + lenFile;
+	unsigned long lenRemaining = lenFile;
 	Match match;
 	while (cp < end) {
 		if ((unsigned long)cp % 4096 == 0) {
 			unsigned long offset = cp - content;
 			std::cout << "\rSearching... " << offset << " bytes ("
-				<< offset * 100 / s.st_size << "%)" << std::flush;
+				<< offset * 100 / lenFile << "%)" << std::flush;
 		}
 		for (std::vector<CheckFunction>::iterator
 			c = checkFunctions.begin(); c != checkFunctions.end(); c++
@@ -187,7 +241,7 @@ int main(int argc, char *argv[])
 			if ((*c)(cp, lenRemaining, &match)) {
 				std::stringstream ss;
 				ss << std::setw(4) << std::setfill('0') << matchCount << '.' << match.ext;
-				std::cout << "\e[2K\rFound match " << std::hex << match.len
+				std::cout << "\033[2K\rFound match " << std::hex << match.len
 					<< "@" << (cp - content) << std::dec << ": writing " << ss.str()
 					<< " [";
 				switch (match.cat) {
@@ -200,21 +254,47 @@ int main(int argc, char *argv[])
 				}
 				std::cout << "; " << match.desc << "]" << std::endl;
 
+#ifdef _WIN32
+				HANDLE hFileMatch = CreateFile(ss.str().c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, NULL, NULL);
+				if (hFileMatch == NULL) {
+					std::cerr << "Unable to create output file: " << GetLastErrorAsString() << std::endl;
+					return 5;
+				}
+				SetFilePointer(hFileMatch, match.len, 0, FILE_BEGIN);
+				SetEndOfFile(hFileMatch);
+				HANDLE hMapMatch = CreateFileMapping(hFileMatch, NULL, PAGE_READWRITE, 0, 0, NULL);
+				if (hMapMatch == NULL) {
+					std::cerr << "Unable to memory map output file: " << GetLastErrorAsString() << std::endl;
+					return 6;
+				}
+				uint8_t *matchContent = (uint8_t *)MapViewOfFile(hMapMatch, FILE_MAP_WRITE, 0, 0, 0);
+				if (matchContent == NULL) {
+					std::cerr << "Unable to memory map output file view: " << GetLastErrorAsString() << std::endl;
+					return 7;
+				}
+#else
 				int fdmatch = open(ss.str().c_str(), O_RDWR | O_CREAT, 0644);
 				if (fdmatch < 0) {
 					std::cerr << "Unable to open output file: " << strerror(errno) << std::endl;
-					return 2;
+					return 5;
 				}
 				ftruncate(fdmatch, match.len);
 
 				uint8_t *matchContent = (uint8_t *)mmap(0, match.len, PROT_WRITE, MAP_SHARED, fdmatch, 0);
 				if (matchContent == MAP_FAILED) {
 					std::cerr << "Unable to mmap() output file: " << strerror(errno) << std::endl;
-					return 2;
+					return 7;
 				}
+#endif
 				memcpy(matchContent, cp, match.len);
+#ifdef _WIN32
+				UnmapViewOfFile(matchContent);
+				CloseHandle(hMapMatch);
+				CloseHandle(hFileMatch);
+#else
 				munmap(matchContent, match.len);
 				close(fdmatch);
+#endif
 				matchCount++;
 				cp += match.len - 1;
 				lenRemaining -= match.len - 1;
@@ -224,9 +304,15 @@ int main(int argc, char *argv[])
 		cp++;
 		lenRemaining--;
 	}
-	std::cout << "\e[2K\rComplete.  " << s.st_size << " bytes (100%)" << std::endl;
+	std::cout << "\033[2K\rComplete.  " << lenFile << " bytes (100%)" << std::endl;
 
+#ifdef _WIN32
+	UnmapViewOfFile(content);
+	CloseHandle(hMap);
+	CloseHandle(hFile);
+#else
 	munmap(content, s.st_size);
 	close(fd);
+#endif
 	return 0;
 }

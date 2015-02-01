@@ -34,3 +34,10 @@ tests/tests.trs
 
 # Compiled binaries
 src/ripper6
+
+# Visual Studio
+Debug/
+Release/
+*.suo
+*.vcxproj.user
+testCaseCollection.xml
