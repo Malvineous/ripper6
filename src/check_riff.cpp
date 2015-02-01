@@ -34,10 +34,16 @@ bool check_riff(const uint8_t *content, unsigned long len, Match *mc)
 		mc->ext = "avi";
 		mc->desc = "Microsoft AVI";
 	} else if (type.compare("DSMF") == 0) {
+		// Ignore files >16MB as they are probably false positives
+		if (lenChunk > 16777216) return false;
+
 		mc->cat = check::Music;
 		mc->ext = "dsm";
 		mc->desc = "DSIK DSMF module";
 	} else if (type.compare("RMID") == 0) {
+		// Ignore files >16MB as they are probably false positives
+		if (lenChunk > 16777216) return false;
+
 		mc->cat = check::Music;
 		mc->ext = "rmi";
 		mc->desc = "RIFF MIDI";
@@ -46,6 +52,9 @@ bool check_riff(const uint8_t *content, unsigned long len, Match *mc)
 		mc->ext = "wav";
 		mc->desc = "Microsoft Wave";
 	} else {
+		// Ignore files >16MB as they are probably false positives
+		if (lenChunk > 16777216) return false;
+
 		// Exclude anything with control or extended characters in the type
 		// field.  The spec says this isn't allowed but then goes on to explain
 		// how to include newlines and other control characters in this field(!)

@@ -23,6 +23,9 @@ bool check_iff(const uint8_t *content, unsigned long len, Match *mc)
 	REQUIRE(content, "FORM");
 	uint32_t lenChunk = as_u32be(content + 4);
 
+	// Ignore files >16MB as they are probably false positives
+	if (lenChunk > 16777216) return false;
+
 	// Chunk sizes must be a multiple of two
 	if (lenChunk % 2) lenChunk++;
 
