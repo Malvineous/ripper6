@@ -37,9 +37,8 @@ The program is compiled and installed in the usual way:
   ./configure && make
   sudo make install
 
-You will need libgamecommon installed first.  If you downloaded the git
-release, run ./autogen.sh before the commands above.  You can also run
-"make check" to compile and run the tests.
+If you downloaded the git release, run ./autogen.sh before the commands above.
+You can also run "make check" to compile and run the tests.
 
 Most of the file formats are fully documented on the ModdingWiki - see
 http://www.shikadi.net/moddingwiki/

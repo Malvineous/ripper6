@@ -15,8 +15,6 @@ AC_PROG_CXX
 # Checks for libraries.
 AC_PROG_LIBTOOL
 
-PKG_CHECK_MODULES([libgamecommon], [libgamecommon])
-
 AM_SILENT_RULES([yes])
 
 AC_OUTPUT(Makefile src/Makefile)

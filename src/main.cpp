@@ -2,7 +2,7 @@
  * @file   main.cpp
  * @brief  Ripper 6 entry point.
  *
- * Copyright (C) 2014 Adam Nielsen <malvineous@shikadi.net>
+ * Copyright (C) 2014-2015 Adam Nielsen <malvineous@shikadi.net>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <string.h>
+#include <unistd.h>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <camoto/iostream_helpers.hpp>
-
-using namespace camoto;
+#include "byteorder.hpp"
 
 struct check {
 	enum MatchCategory {
